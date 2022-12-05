@@ -13,6 +13,9 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
+// react-router-dom components
+import { Navigate } from "react-router-dom";
+
 // @mui material components
 import Card from "@mui/material/Card";
 
@@ -28,7 +31,13 @@ import CoverLayout from "layouts/authentication/components/CoverLayout";
 // Images
 import bgImage from "assets/images/bg-reset-cover.jpeg";
 
+// Auth hook
+import { useAuth } from "context/auth.context";
+
 function Cover() {
+  const { user } = useAuth();
+
+  if (user && user.token) return <Navigate to="/dashboard" />;
   return (
     <CoverLayout coverHeight="50vh" image={bgImage}>
       <Card>
