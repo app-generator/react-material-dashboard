@@ -13,8 +13,10 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
+import { useState } from "react";
+
 // react-router-dom components
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -32,7 +34,37 @@ import CoverLayout from "layouts/authentication/components/CoverLayout";
 // Images
 import bgImage from "assets/images/bg-sign-up-cover.jpeg";
 
+// Auth hook
+import { useAuth } from "context/auth.context";
+
+// Register API
+import { register } from "api/auth";
+
 function Cover() {
+  const { user, handleUserData } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleEmail = ({ target: { value } }) => setEmail(value);
+  const handlePassword = ({ target: { value } }) => setPassword(value);
+  const handleSignUp = async () => {
+    try {
+      const { data } = await register({ email, password });
+
+      if (data.success) {
+        handleUserData(data.user, data.token);
+        return;
+      }
+
+      setError(data.message);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  if (user && user.token) return <Navigate to="/dashboard" />;
+
   return (
     <CoverLayout image={bgImage}>
       <Card>
@@ -60,10 +92,24 @@ function Cover() {
               <MDInput type="text" label="Name" variant="standard" fullWidth />
             </MDBox>
             <MDBox mb={2}>
-              <MDInput type="email" label="Email" variant="standard" fullWidth />
+              <MDInput
+                type="email"
+                label="Email"
+                variant="standard"
+                value={email}
+                onChange={handleEmail}
+                fullWidth
+              />
             </MDBox>
             <MDBox mb={2}>
-              <MDInput type="password" label="Password" variant="standard" fullWidth />
+              <MDInput
+                type="password"
+                label="Password"
+                variant="standard"
+                value={password}
+                onChange={handlePassword}
+                fullWidth
+              />
             </MDBox>
             <MDBox display="flex" alignItems="center" ml={-1}>
               <Checkbox />
@@ -86,8 +132,15 @@ function Cover() {
                 Terms and Conditions
               </MDTypography>
             </MDBox>
+            {error && (
+              <MDBox mb={2}>
+                <MDTypography variant="p" fontWeight="medium" color="pink.600" mt={1}>
+                  {error}
+                </MDTypography>
+              </MDBox>
+            )}
             <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" color="info" fullWidth>
+              <MDButton variant="gradient" color="info" onClick={handleSignUp} fullWidth>
                 sign in
               </MDButton>
             </MDBox>
