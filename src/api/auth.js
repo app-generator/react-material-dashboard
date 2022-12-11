@@ -1,13 +1,13 @@
 import api from "./index";
 
 export const login = (data) => {
-  return api.post("api/login", data);
+  return api.post("users/login", data);
 };
 
 export const register = (data) => {
-  return api.post("api/register", data);
+  return api.post("users/register", data);
 };
 
 export const logout = (data) => {
-  return api.post("api/logout", data, { headers: { Authorization: `Bearer ${data.token}` } });
+  return api.post("users/logout", data, { headers: { Authorization: `Bearer ${data.token}` } });
 };
