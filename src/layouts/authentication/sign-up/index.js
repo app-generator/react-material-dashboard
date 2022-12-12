@@ -57,7 +57,7 @@ function Cover() {
         return;
       }
 
-      setError(data.message);
+      setError(data.msg);
     } catch (err) {
       setError(err.message);
     }
@@ -134,7 +134,7 @@ function Cover() {
             </MDBox>
             {error && (
               <MDBox mb={2}>
-                <MDTypography variant="p" fontWeight="medium" color="pink.600" mt={1}>
+                <MDTypography variant="body2" color="error" mt={1}>
                   {error}
                 </MDTypography>
               </MDBox>

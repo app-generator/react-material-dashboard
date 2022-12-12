@@ -1,3 +1,4 @@
+import { BASE } from "config/constants";
 import api from "./index";
 
 const getToken = () => {
@@ -8,6 +9,4 @@ const getToken = () => {
   throw new Error("Auth token required!");
 };
 
-export const logout = (data) => {
-  return api.post("api/logout", data, { headers: { Authorization: `Bearer ${getToken()}` } });
-};
+export const logout = (data) => api.post(`${BASE}/logout`, data, { headers: { Authorization: `Bearer ${getToken()}` } })
