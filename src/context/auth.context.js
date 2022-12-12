@@ -1,21 +1,32 @@
-import { createContext, useCallback, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useMemo, useState } from "react";
+import { oneOfType, arrayOf, node } from "prop-types";
 
 const AuthContext = createContext(null);
 
-export const AuthProvider = ({ children }) => {
+export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => JSON.parse(localStorage.getItem("user")) || {});
 
   const handleUserData = useCallback(
-    (userData, token) => {
-      const _user = { ...userData, token };
+    (data, token) => {
+      const fetchedUser = { ...data, token };
 
-      localStorage.setItem("user", JSON.stringify(_user));
-      setUser(_user);
+      localStorage.setItem("user", JSON.stringify(fetchedUser));
+      setUser(fetchedUser);
     },
     [setUser]
   );
 
-  return <AuthContext.Provider value={{ user, handleUserData }}>{children}</AuthContext.Provider>;
+  const userData = useMemo(() => ({ user, handleUserData }), [user, handleUserData]);
+
+  return <AuthContext.Provider value={userData}>{children}</AuthContext.Provider>;
+};
+
+AuthProvider.defaultProps = {
+  children: null,
+};
+
+AuthProvider.propTypes = {
+  children: oneOfType([arrayOf(node), node]),
 };
 
 export const useAuth = () => useContext(AuthContext);

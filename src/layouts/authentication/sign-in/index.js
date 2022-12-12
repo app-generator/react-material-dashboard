@@ -59,14 +59,14 @@ function Basic() {
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
   const handleSignIn = async () => {
     try {
-      const { data } = await login({ email, password, rememberMe });
+      const { data } = await login({ email, password });
 
       if (data.success) {
         handleUserData(data.user, data.token);
         return;
       }
 
-      setError(data.message);
+      setError(data.msg);
     } catch (err) {
       setError(err.message);
     }
@@ -137,7 +137,7 @@ function Basic() {
             </MDBox>
             {error && (
               <MDBox mb={2}>
-                <MDTypography variant="p" fontWeight="medium" color="pink.600" mt={1}>
+                <MDTypography variant="body2" color="error" mt={1}>
                   {error}
                 </MDTypography>
               </MDBox>
